@@ -47,15 +47,15 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.ANDROID_HOME }}/platforms/android-37
+            ${{ env.ANDROID_HOME }}/platforms/android-37.0
             ${{ env.ANDROID_HOME }}/build-tools/37.0.0
             ${{ env.ANDROID_HOME }}/build-tools/36.0.0
             ${{ env.ANDROID_HOME }}/platform-tools
-          key: yoru-android-sdk-37-37.0.0-${{ runner.os }}
+          key: yoru-android-sdk-37.0-37.0.0-${{ runner.os }}
       - name: Install missing Android SDK components
         run: |
-          if [ ! -d "$ANDROID_HOME/platforms/android-37" ] || [ ! -d "$ANDROID_HOME/build-tools/37.0.0" ]; then
-            sdkmanager "platforms;android-37" "build-tools;37.0.0" "build-tools;36.0.0" "platform-tools" || sdkmanager "platforms;android-37" "build-tools;36.0.0" "platform-tools"
+          if [ ! -d "$ANDROID_HOME/platforms/android-37.0" ] || [ ! -d "$ANDROID_HOME/build-tools/37.0.0" ]; then
+            sdkmanager "platforms;android-37.0" "build-tools;37.0.0" "build-tools;36.0.0" "platform-tools" || sdkmanager "platforms;android-37.0" "build-tools;36.0.0" "platform-tools"
           else
             echo "Android SDK 37 already restored"
           fi
