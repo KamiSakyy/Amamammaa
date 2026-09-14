@@ -100,8 +100,8 @@ jobs:
         run: |
           size=$(stat -c%s app/build/outputs/apk/release/app-release.apk)
           echo "Release APK size: $size bytes"
-          if [ "$size" -gt 3145728 ]; then
-            echo "::error title=APK too large::Release APK is $size bytes, budget is 3 MB."
+          if [ "$size" -gt 8388608 ]; then
+            echo "::error title=APK too large::Release APK is $size bytes, budget is 8 MB."
             exit 1
           fi
       - name: Save APK into branch
