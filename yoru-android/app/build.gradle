@@ -1,0 +1,53 @@
+plugins { id 'com.android.application' }
+def owner = new Properties()
+def ownerFile = rootProject.file('owner-signing/signing.properties')
+if (ownerFile.exists()) ownerFile.withInputStream { owner.load(it) }
+def certHash = rootProject.file('owner-signing/certificate-sha256.txt').exists() ? rootProject.file('owner-signing/certificate-sha256.txt').text.trim() : ''
+android {
+ namespace 'app.yoru.mobile'
+ compileSdk 37
+ defaultConfig {
+  applicationId 'app.yoru.mobile'
+  minSdk 26
+  targetSdk 37
+  versionCode 71
+  versionName '4.20.0'
+  buildConfigField 'String', 'EXPECTED_SIGNER_SHA256', '"' + certHash + '"'
+  ndk { abiFilters 'arm64-v8a', 'armeabi-v7a' }
+ }
+ signingConfigs { release {
+  if (ownerFile.exists()) {
+   storeType owner.getProperty('storeType', 'PKCS12')
+   storeFile rootProject.file(owner.getProperty('storeFile', 'yoru-release.p12'))
+   storePassword owner.getProperty('storePassword')
+   keyAlias owner.getProperty('keyAlias')
+   keyPassword owner.getProperty('keyPassword')
+  }
+  enableV1Signing false
+  enableV2Signing true
+  enableV3Signing true
+ } }
+ buildTypes {
+  release { minifyEnabled true; shrinkResources true; debuggable false; signingConfig signingConfigs.release; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' }
+  debug { applicationIdSuffix '.debug' }
+ }
+ buildFeatures { buildConfig true }
+ compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+ packaging { resources { excludes += ['META-INF/DEPENDENCIES','META-INF/LICENSE*','META-INF/NOTICE*','META-INF/versions/9/OSGI-INF/**','META-INF/AL2.0','META-INF/LGPL2.1','META-INF/*.kotlin_module'] }; jniLibs { useLegacyPackaging true } }
+}
+
+dependencies {
+ testImplementation 'junit:junit:4.13.2'
+ implementation 'androidx.media3:media3-exoplayer:1.5.1'
+ implementation 'androidx.media3:media3-exoplayer-hls:1.5.1'
+ implementation 'androidx.media3:media3-exoplayer-dash:1.5.1'
+ implementation 'androidx.media3:media3-ui:1.5.1'
+ implementation 'androidx.media3:media3-database:1.5.1'
+ implementation 'org.jsoup:jsoup:1.18.3'
+ implementation 'androidx.annotation:annotation:1.9.1'
+ implementation 'androidx.core:core:1.15.0'
+ implementation 'androidx.recyclerview:recyclerview:1.4.0'
+ implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+ implementation 'androidx.documentfile:documentfile:1.0.1'
+ implementation 'com.squareup.okhttp3:okhttp:5.4.0'
+}
