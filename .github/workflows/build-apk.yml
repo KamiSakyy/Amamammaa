@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - arena/01a09fc1-amamammaa
+      - arena/01a0a027-amamammaa
     paths:
       - 'yoru-android/app/**'
       - 'yoru-android/settings.gradle'
@@ -107,7 +107,7 @@ jobs:
       - name: Save APK into branch
         working-directory: .
         run: |
-          git pull --rebase origin arena/01a09fc1-amamammaa
+          git pull --rebase origin arena/01a0a027-amamammaa
           mkdir -p apk-output
           rm -f apk-output/YORU-4.20.0-release.apk apk-output/YORU-4.20.0-release.apk.sha256 apk-output/YORU-4.20.0-debug.apk apk-output/YORU-4.20.0-debug.apk.sha256 apk-output/build-error.log
           cp yoru-android/app/build/outputs/apk/release/app-release.apk apk-output/YORU-4.20.0-release.apk
@@ -119,7 +119,7 @@ jobs:
           git add -f apk-output/YORU-4.20.0-*.apk apk-output/YORU-4.20.0-*.apk.sha256
           git add -u apk-output/build-error.log 2>/dev/null || true
           git commit -m "Add built YORU 4.20.0 release APK [skip ci]" || exit 0
-          git push origin HEAD:arena/01a09fc1-amamammaa
+          git push origin HEAD:arena/01a0a027-amamammaa
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:

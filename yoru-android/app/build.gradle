@@ -28,7 +28,7 @@ android {
   enableV3Signing true
  } }
  buildTypes {
-  release { minifyEnabled true; shrinkResources true; debuggable false; signingConfig signingConfigs.release; proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro' }
+  release { minifyEnabled false; shrinkResources false; debuggable false; signingConfig signingConfigs.release }
   debug { applicationIdSuffix '.debug' }
  }
  buildFeatures { buildConfig true }
