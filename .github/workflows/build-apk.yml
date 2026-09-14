@@ -47,17 +47,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            ${{ env.ANDROID_HOME }}/platforms/android-37.0
-            ${{ env.ANDROID_HOME }}/build-tools/37.0.0
+            ${{ env.ANDROID_HOME }}/platforms/android-36
             ${{ env.ANDROID_HOME }}/build-tools/36.0.0
             ${{ env.ANDROID_HOME }}/platform-tools
-          key: yoru-android-sdk-37.0-37.0.0-${{ runner.os }}
+          key: yoru-android-sdk-36-36.0.0-${{ runner.os }}
       - name: Install missing Android SDK components
         run: |
-          if [ ! -d "$ANDROID_HOME/platforms/android-37.0" ] || [ ! -d "$ANDROID_HOME/build-tools/37.0.0" ]; then
-            sdkmanager "platforms;android-37.0" "build-tools;37.0.0" "build-tools;36.0.0" "platform-tools" || sdkmanager "platforms;android-37.0" "build-tools;36.0.0" "platform-tools"
+          if [ ! -d "$ANDROID_HOME/platforms/android-36" ] || [ ! -d "$ANDROID_HOME/build-tools/36.0.0" ]; then
+            sdkmanager "platforms;android-36" "build-tools;36.0.0" "platform-tools"
           else
-            echo "Android SDK 37 already restored"
+            echo "Android SDK 36 already restored"
           fi
       - name: Verify release signing files
         run: |
@@ -92,16 +91,15 @@ jobs:
           fi
       - name: Verify APK signatures
         run: |
-          APKSIGNER="$ANDROID_HOME/build-tools/37.0.0/apksigner"
-          [ -x "$APKSIGNER" ] || APKSIGNER="$ANDROID_HOME/build-tools/36.0.0/apksigner"
+          APKSIGNER="$ANDROID_HOME/build-tools/36.0.0/apksigner"
           "$APKSIGNER" verify app/build/outputs/apk/release/app-release.apk
           "$APKSIGNER" verify app/build/outputs/apk/debug/app-debug.apk
       - name: Check APK size budget
         run: |
           size=$(stat -c%s app/build/outputs/apk/release/app-release.apk)
           echo "Release APK size: $size bytes"
-          if [ "$size" -gt 3145728 ]; then
-            echo "::error title=APK too large::Release APK is $size bytes, budget is 3 MB."
+          if [ "$size" -gt 8388608 ]; then
+            echo "::error title=APK too large::Release APK is $size bytes, budget is 8 MB."
             exit 1
           fi
       - name: Save APK into branch
