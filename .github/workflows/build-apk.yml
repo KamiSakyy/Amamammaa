@@ -78,10 +78,16 @@ jobs:
               grep -nE "error:|warning: \[|FAILURE|Caused by|What went wrong|Could not" ../build-release.log | head -80
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
-            grep -E "error:|FAILURE|Could not resolve|Could not find" ../build-release.log | head -40 | while IFS= read -r line; do
-              msg=$(printf '%.400s' "$line" | sed 's/%/%25/g')
+            grep -B1 -A3 -E "error:|FAILURE|Could not resolve|Could not find|What went wrong" ../build-release.log | head -160 > ../build-error.log
+            while IFS= read -r line; do
+              msg=$(printf '%.300s' "$line" | sed 's/%/%25/g')
               echo "::error::$msg"
-            done
+            done < ../build-error.log
+            mkdir -p apk-output
+            cp ../build-error.log apk-output/build-error.log
+            git add apk-output/build-error.log
+            git commit -m "CI: build errors [skip ci]" >/dev/null 2>&1
+            git push origin "HEAD:$GITHUB_REF_NAME" >/dev/null 2>&1 || true
             exit "$code"
           fi
       - name: Verify APK signatures
