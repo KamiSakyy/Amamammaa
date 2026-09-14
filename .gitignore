@@ -1,0 +1,18 @@
+# Gradle / Android build artifacts
+*.iml
+.gradle/
+**/build/
+!gradle/wrapper/gradle-wrapper.jar
+local.properties
+.idea/
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk.idsig
+
+# Keep committed APK outputs and signing material
+!apk-output/
+!apk-output/**
+!yoru-android/owner-signing/
+!yoru-android/owner-signing/**

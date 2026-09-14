@@ -109,7 +109,7 @@ jobs:
         run: |
           git pull --rebase origin arena/01a09fc1-amamammaa
           mkdir -p apk-output
-          rm -f apk-output/YORU-4.20.0-release.apk apk-output/YORU-4.20.0-release.apk.sha256 apk-output/YORU-4.20.0-debug.apk apk-output/YORU-4.20.0-debug.apk.sha256
+          rm -f apk-output/YORU-4.20.0-release.apk apk-output/YORU-4.20.0-release.apk.sha256 apk-output/YORU-4.20.0-debug.apk apk-output/YORU-4.20.0-debug.apk.sha256 apk-output/build-error.log
           cp yoru-android/app/build/outputs/apk/release/app-release.apk apk-output/YORU-4.20.0-release.apk
           sha256sum apk-output/YORU-4.20.0-release.apk > apk-output/YORU-4.20.0-release.apk.sha256
           cp yoru-android/app/build/outputs/apk/debug/app-debug.apk apk-output/YORU-4.20.0-debug.apk
@@ -117,6 +117,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f apk-output/YORU-4.20.0-*.apk apk-output/YORU-4.20.0-*.apk.sha256
+          git add -u apk-output/build-error.log 2>/dev/null || true
           git commit -m "Add built YORU 4.20.0 release APK [skip ci]" || exit 0
           git push origin HEAD:arena/01a09fc1-amamammaa
       - name: Upload APK
